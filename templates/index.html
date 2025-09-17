@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Call Transcript Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Call Transcript Analyzer</h1>
+        <textarea id="transcript" placeholder="Paste customer call transcript here..."></textarea>
+        <button onclick="analyzeTranscript()">Analyze</button>
+        <div id="results">
+            <p><strong>Summary:</strong> <span id="summary"></span></p>
+            <p><strong>Sentiment:</strong> <span id="sentiment"></span></p>
+        </div>
+    </div>
+
+    <script>
+        async function analyzeTranscript() {
+            const transcript = document.getElementById('transcript').value;
+            const response = await fetch('/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transcript })
+            });
+            const data = await response.json();
+            document.getElementById('summary').innerText = data.summary || data.error;
+            document.getElementById('sentiment').innerText = data.sentiment || 'Error';
+        }
+    </script>
+</body>
+</html>
